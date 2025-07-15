@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "556101373978",
+    "project_id": "chatmint-43c97",
+    "storage_bucket": "chatmint-43c97.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:556101373978:android:b9513efe55c9a7a60e81a3",
+        "android_client_info": {
+          "package_name": "com.example.chatmint"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDtuWqXL-6_ZtrunGIBXofO6o3HB4VfboI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
