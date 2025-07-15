@@ -68,7 +68,7 @@ class BlockedUsersPage extends StatelessWidget {
 
           // load complete
           return ListView.builder(
-            itemCount: 5,
+            itemCount: blockedUsers.length,
             itemBuilder: (context, index) {
               final user = blockedUsers[index];
               return UserTile(
