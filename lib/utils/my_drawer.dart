@@ -1,13 +1,12 @@
 import 'package:chatmint/auth/auth_service.dart';
 import 'package:chatmint/pages/settings_page.dart';
-import 'package:chatmint/utils/light_mode.dart';
 import 'package:flutter/material.dart';
 
 class MyDrawer extends StatelessWidget {
   const MyDrawer({super.key});
 
+  // Logout method
   void logout() {
-    // get auth service
     final auth = AuthService();
     auth.signOut();
   }
@@ -19,40 +18,36 @@ class MyDrawer extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
+          // Top section: Logo and navigation items
           Column(
             children: [
-              // logo
-              DrawerHeader(child: Center(child: const Icon(Icons.message, size: 40))),
-
-              // home list tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  title: const Text("H O M E"),
-                  leading: const Icon(Icons.home),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
+              // Logo or icon in header
+              const DrawerHeader(
+                child: Center(child: Icon(Icons.message, size: 40)),
               ),
 
-              // setting lit tile
-              Padding(
-                padding: const EdgeInsets.only(left: 25.0),
-                child: ListTile(
-                  title: const Text("S E T T I N G S"),
-                  leading: const Icon(Icons.settings),
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (_) => const SettingsPage()),
-                    );
-                  },
-                ),
+              // Home list tile
+              _buildDrawerTile(
+                icon: Icons.home,
+                text: "H O M E",
+                onTap: () => Navigator.pop(context),
+              ),
+
+              // Settings list tile
+              _buildDrawerTile(
+                icon: Icons.settings,
+                text: "S E T T I N G S",
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (_) => const SettingsPage()),
+                  );
+                },
               ),
             ],
           ),
-          // logout list tile
+
+          // Bottom section: Logout
           Padding(
             padding: const EdgeInsets.only(left: 25.0, bottom: 25),
             child: ListTile(
@@ -63,6 +58,18 @@ class MyDrawer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Reusable drawer tile method
+  Widget _buildDrawerTile({
+    required IconData icon,
+    required String text,
+    required VoidCallback onTap,
+  }) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 25.0),
+      child: ListTile(leading: Icon(icon), title: Text(text), onTap: onTap),
     );
   }
 }

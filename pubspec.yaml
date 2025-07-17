@@ -41,13 +41,26 @@ dependencies:
   cloud_firestore: ^5.6.11
   provider: ^6.1.5
   flutter_native_splash: ^2.4.6
+  shared_preferences: ^2.5.3
 
 flutter_native_splash:
-  color: "#FFFFFF"
-  image: "assets/icon.png"
+  color: "#FFFFFF"              # Light theme background color
+  color_dark: "#121212"         # Dark theme background color
+
+  image: assets/icon.png        # Light theme splash image
+  image_dark: assets/icon.png  # Dark theme splash image (create this!)
+
   android_12:
     color: "#FFFFFF"
-    image: "assets/icon.png"
+    color_dark: "#121212"
+
+    image: assets/icon.png
+    image_dark: assets/icon.png
+
+  android: true
+  ios: true
+  fullscreen: true
+
 
 dev_dependencies:
   flutter_test:

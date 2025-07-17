@@ -9,69 +9,64 @@ class SettingsPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final themeProvider = Provider.of<ThemeProvider>(context);
+
     return Scaffold(
-      appBar: AppBar(title: Text("Settings"), centerTitle: true),
+      appBar: AppBar(title: const Text("Settings"), centerTitle: true),
       body: Column(
         children: [
-          Container(
-            decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.secondary,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            margin: EdgeInsets.all(25),
-            padding: EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text("Dark mode"),
-                CupertinoSwitch(
-                  value:
-                      Provider.of<ThemeProvider>(
-                        context,
-                        listen: false,
-                      ).isDarkMode,
-                  onChanged: (value) {
-                    Provider.of<ThemeProvider>(
-                      context,
-                      listen: false,
-                    ).toggleTheme();
-                  },
-                ),
-              ],
+          // Toggle for Dark Mode
+          _buildSettingTile(
+            context: context,
+            title: "Dark mode",
+            trailing: CupertinoSwitch(
+              value: themeProvider.isDarkMode,
+              onChanged: (_) => themeProvider.toggleTheme(),
             ),
           ),
-          InkWell(
+
+          const SizedBox(height: 10),
+
+          // Blocked Users Navigation Tile
+          _buildSettingTile(
+            context: context,
+            title: "Blocked Users",
+            trailing: const Icon(Icons.arrow_forward_ios_rounded),
             onTap: () {
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (_) => BlockedUsersPage()),
               );
             },
-            child: Container(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.secondary,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              margin: EdgeInsets.symmetric(horizontal: 25),
-              padding: EdgeInsets.all(16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Blocked Users"),
-                  IconButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (_) => BlockedUsersPage()),
-                      );
-                    },
-                    icon: Icon(Icons.arrow_forward_ios_rounded),
-                  ),
-                ],
-              ),
-            ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Reusable setting tile for cleaner layout
+  Widget _buildSettingTile({
+    required BuildContext context,
+    required String title,
+    required Widget trailing,
+    VoidCallback? onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        margin: const EdgeInsets.symmetric(horizontal: 25, vertical: 8),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(title, style: const TextStyle(fontSize: 16)),
+            trailing,
+          ],
+        ),
       ),
     );
   }

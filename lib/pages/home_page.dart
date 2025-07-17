@@ -9,68 +9,79 @@ import 'package:google_fonts/google_fonts.dart';
 class HomePage extends StatelessWidget {
   HomePage({super.key});
 
-  // chat & auth service
+  // Services to handle chat and authentication
   final ChatService _chatService = ChatService();
   final AuthService _authService = AuthService();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Home",style: TextStyle(fontFamily: GoogleFonts.badScript().fontFamily),), centerTitle: true,),
+      // App bar with custom font
+      appBar: AppBar(
+        title: Text(
+          "Home",
+          style: TextStyle(fontFamily: GoogleFonts.badScript().fontFamily),
+        ),
+        centerTitle: true,
+      ),
+
+      // Custom navigation drawer
       drawer: const MyDrawer(),
+
+      // Body: list of available users to chat with
       body: _buildUserList(),
     );
   }
 
-  // build a list of users except for the current logged in user
-
+  // Builds a list of users (excluding the current user)
   Widget _buildUserList() {
     return StreamBuilder(
       stream: _chatService.getUsersStreamExcludingBlocked(),
       builder: (context, snapshot) {
-        // error
+        // Error handling
         if (snapshot.hasError) {
-          return const Text("Error");
+          return const Center(child: Text("Something went wrong"));
         }
 
-        // loading
+        // Loading indicator while waiting for data
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: const Text("Loading.."));
+          return const Center(child: Text("Loading..."));
         }
 
-        // list view
+        // If data is available, map users to a ListView
+        final users = snapshot.data;
+
+        if (users == null || users.isEmpty) {
+          return const Center(child: Text("No users found."));
+        }
+
         return ListView(
-          children:
-              snapshot.data!
-                  .map<Widget>(
-                    (userData) => _buildUserListItem(userData, context),
-                  )
-                  .toList(),
+          children: users
+              .where((user) => user["email"] != _authService.getCurrentUser()?.email) // Filter out current user
+              .map<Widget>(
+                (userData) => _buildUserListItem(userData, context),
+          )
+              .toList(),
         );
       },
     );
   }
 
-  // build individual list tile for user
-  Widget _buildUserListItem(
-    Map<String, dynamic> userData,
-    BuildContext context,
-  ) {
-    // display all users except current user
-    if(userData["email"] != _authService.getCurrentUser()!.email){
-      return UserTile(
-        text: userData["email"],
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (_) => ChatPage(receiverEmail: userData["email"],receiverID: userData["uid"],),
+  // Builds an individual user tile
+  Widget _buildUserListItem(Map<String, dynamic> userData, BuildContext context) {
+    return UserTile(
+      text: userData["email"] ?? "No email",
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ChatPage(
+              receiverEmail: userData["email"],
+              receiverID: userData["uid"],
             ),
-          );
-        },
-      );
-    } else{
-      return Container();
-    }
+          ),
+        );
+      },
+    );
   }
 }
